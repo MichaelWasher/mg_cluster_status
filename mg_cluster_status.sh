@@ -408,7 +408,7 @@ then
   AVAILABLE_MACHINES=${AVAILABLE_MACHINES:-$(${OC} get machine.machine.openshift.io -n openshift-machine-api -o wide 2>/dev/null | grep -Ev "^$|^No resources|^resource type")}
   if [[ ! -z ${AVAILABLE_MACHINES} ]]
   then
-    CLUSTERAUTOSCALER=${CLUSTERAUTOSCALER:-$(${OC} get clusterautoscaler.autoscaling.openshift.io default -o json 2>&1 | grep -Ev "^$|^No resources|^resource type" | jq -r 'if(.kind != null) then . | del(.metadata.annotations) else null end')}
+    CLUSTERAUTOSCALER=${CLUSTERAUTOSCALER:-$(${OC} get clusterautoscaler.autoscaling.openshift.io default -o json 2>&1 | grep -Ev "^$|^No resources|^resource type|^.*not found$" | jq -r 'if(.kind != null) then . | del(.metadata.annotations) else null end')}
     if [[ "${CLUSTERAUTOSCALER}" != "null" ]] && [[ "${CLUSTERAUTOSCALER}" != "" ]]
     then
       fct_title "ClusterAutoscaller"
